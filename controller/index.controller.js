@@ -93,21 +93,32 @@ function isValidInput(body) {
 // get all posts
 async function getAllPosts(req, res) {
   try {
-    const { categories, lang} = req.query;
-    let posts;
+    const { categories, lang, page } = req.query;
+    const pageSize = 10; 
 
-    if(categories && lang){
+    let query = {};
+
+    if (categories && lang) {
       const categoryField = `category.${lang}`;
-      posts = await Post.find({ [categoryField]: { $in: categories } });
-    }else{
-      posts = await Post.find();
+      query[categoryField] = { $in: categories };
     }
-    res.status(200).json(posts);
+
+    const totalPosts = await Post.countDocuments(query);
+    const totalPages = Math.ceil(totalPosts / pageSize);
+
+    const skip = (page - 1) * pageSize;
+    const posts = await Post.find(query)
+      .skip(skip)
+      .limit(pageSize);
+
+    res.status(200).json({
+      posts,
+      currentPage: page,
+      totalPages,
+    });
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ message: "Internal server error", error: error.message });
+    res.status(500).json({ message: "Internal server error", error: error.message });
   }
 }
 
