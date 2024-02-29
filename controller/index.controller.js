@@ -87,14 +87,13 @@ function isValidInput(body) {
   );
 }
 
-
 //Something went wrong. Please try again.
 
 // get all posts
 async function getAllPosts(req, res) {
   try {
     const { categories, lang, page } = req.query;
-    const pageSize = 10; 
+    const pageSize = 10;
 
     let query = {};
 
@@ -107,9 +106,7 @@ async function getAllPosts(req, res) {
     const totalPages = Math.ceil(totalPosts / pageSize);
 
     const skip = (page - 1) * pageSize;
-    const posts = await Post.find(query)
-      .skip(skip)
-      .limit(pageSize);
+    const posts = await Post.find(query).skip(skip).limit(pageSize);
 
     res.status(200).json({
       posts,
@@ -118,9 +115,43 @@ async function getAllPosts(req, res) {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
 }
+
+ // Define a helper function to find and send the posts
+const findAndSendPosts = async (query, res) => {
+  try {
+    // Find the posts sorted by createdAt in descending order and limited to 4
+    const posts = await Post.find(query).sort({ createdAt: -1 }).limit(4);
+
+    // Send the posts as a JSON response
+    res.status(200).json({ posts });
+  } catch (error) {
+    // Handle any errors
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
+};
+
+// Define a function to get the latest posts
+const getLatestPosts = async (req, res) => {
+  const { categories, lang } = req.query;
+  let query = {};
+
+  if (categories && lang) {
+    // Build the query based on the categories and language
+    const categoryField = `category.${lang}`;
+    query[categoryField] = { $in: categories };
+  }
+
+  // Call the helper function with the query and the response object
+  findAndSendPosts(query, res);
+};
 
 
 // get one post by ID
@@ -241,4 +272,5 @@ module.exports = {
   getPostById,
   updatePost,
   deletePost,
+  getLatestPosts,
 };

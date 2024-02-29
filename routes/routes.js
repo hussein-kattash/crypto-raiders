@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { createPost } = require("../controller/index.controller");
-const { getAllPosts } = require("../controller/index.controller");
+const { getAllPosts,getLatestPosts } = require("../controller/index.controller");
 const { getPostById } = require("../controller/index.controller");
 const { updatePost } = require("../controller/index.controller");
 const { deletePost } = require("../controller/index.controller");
@@ -24,6 +24,9 @@ router.post("/create-post", verifyAdmin, createPost);
 
 //Get all Method
 router.get("/get-posts", getAllPosts);
+
+//Get latest posts
+router.get("/latest/posts", getLatestPosts);
 
 //Get by ID Method
 router.get("/get-post/:id", getPostById);
