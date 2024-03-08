@@ -48,7 +48,7 @@ async function checkPassword(password, hashedPassword) {
 
 function generateToken(admin) {
   return jwt.sign({ adminId: admin._id, role: admin.role }, jwtSecret, {
-    expiresIn: "1h",
+    expiresIn: "4h",
   });
 }
 

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { createPost } = require("../controller/index.controller");
-const { getAllPosts,getLatestPosts } = require("../controller/index.controller");
+const { getAllPosts,getLatestPosts,getLatestTwentyPosts} = require("../controller/index.controller");
 const { getPostById } = require("../controller/index.controller");
 const { updatePost } = require("../controller/index.controller");
 const { deletePost } = require("../controller/index.controller");
@@ -27,6 +27,9 @@ router.get("/get-posts", getAllPosts);
 
 //Get latest posts
 router.get("/latest/posts", getLatestPosts);
+
+//Get latest twenty posts
+router.get("/latest/twenty/posts", getLatestTwentyPosts);
 
 //Get by ID Method
 router.get("/get-post/:id", getPostById);

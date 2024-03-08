@@ -13,8 +13,8 @@ const app = express();
 app.use(cors());
 
 // middleware
-app.use(bodyParser.json({ limit: '10mb' })); // Adjust the limit as needed
-app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 // connect with monogdb
