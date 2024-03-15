@@ -1,7 +1,6 @@
 const express = require("express")
 const mongoose = require('mongoose');
 const routes = require('./routes/routes');
-const bodyParser = require('body-parser');
 const cors = require("cors");
 
 require("dotenv").config();
@@ -13,8 +12,8 @@ const app = express();
 app.use(cors());
 
 // middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 
 // connect with monogdb
